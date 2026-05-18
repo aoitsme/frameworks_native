@@ -727,10 +727,6 @@ void Layer::callReleaseBufferCallback(const sp<ITransactionCompletedListener>& l
     uint32_t currentMaxAcquiredBufferCount =
             mFlinger->getMaxAcquiredBufferCountForCurrentRefreshRate(mOwnerUid);
 
-    if (FlagManager::getInstance().monitor_buffer_fences()) {
-        buffer->getDependencyMonitor().addEgress(FenceTime::makeValid(fence), "Layer release");
-    }
-
     if (listener) {
         listener->onReleaseBuffer(callbackId, fence, currentMaxAcquiredBufferCount,
                                   false /* removeFromCache */);
@@ -932,7 +928,6 @@ bool Layer::setBuffer(std::shared_ptr<renderengine::ExternalTexture>& buffer,
     SFTRACE_FORMAT_INSTANT("setBuffer %s - %" PRIu64, getDebugName(), bufferData.frameNumber);
 
     mDrawingState.releaseBufferListener = bufferData.releaseBufferListener;
-    mDrawingState.previousBuffer = std::move(mDrawingState.buffer);
     mDrawingState.buffer = std::move(buffer);
     mDrawingState.acquireFence = bufferData.flags.test(BufferData::BufferDataChange::fenceChanged)
             ? bufferData.acquireFence
@@ -1115,7 +1110,6 @@ bool Layer::setTransactionCompletedListeners(const std::vector<sp<CallbackHandle
             handle->acquireTimeOrFence = mCallbackHandleAcquireTimeOrFence;
             handle->frameNumber = mDrawingState.frameNumber;
             handle->previousFrameNumber = mDrawingState.previousFrameNumber;
-            handle->previousBuffer = mDrawingState.previousBuffer;
             if (mPreviousReleaseBufferEndpoint == handle->listener) {
                 // Add fence from previous screenshot now so that it can be dispatched to the
                 // client.

@@ -27,7 +27,6 @@
 #include "Utils/FenceUtils.h"
 
 #include <binder/IInterface.h>
-#include <common/FlagManager.h>
 #include <common/trace.h>
 #include <utils/RefBase.h>
 
@@ -145,14 +144,6 @@ status_t TransactionCallbackInvoker::addCallbackHandle(const sp<CallbackHandle>&
                                                     handle->previousReleaseCallbackId);
         if (handle->bufferReleaseChannel &&
             handle->previousReleaseCallbackId != ReleaseCallbackId::INVALID_ID) {
-            if (FlagManager::getInstance().monitor_buffer_fences()) {
-                if (auto previousBuffer = handle->previousBuffer.lock()) {
-                    previousBuffer->getBuffer()
-                            ->getDependencyMonitor()
-                            .addEgress(FenceTime::makeValid(handle->previousReleaseFence),
-                                       "Txn release");
-                }
-            }
             mBufferReleases.emplace_back(handle->name, handle->bufferReleaseChannel,
                                          handle->previousReleaseCallbackId,
                                          handle->previousReleaseFence,

@@ -112,7 +112,6 @@ public:
         uint32_t bufferTransform;
         bool transformToDisplayInverse;
         Region transparentRegionHint;
-        std::weak_ptr<renderengine::ExternalTexture> previousBuffer;
         std::shared_ptr<renderengine::ExternalTexture> buffer;
         sp<Fence> acquireFence;
         std::shared_ptr<FenceTime> acquireFenceTime;

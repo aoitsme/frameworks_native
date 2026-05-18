@@ -1753,7 +1753,6 @@ void Output::presentFrameAndReleaseLayers(bool flushEvenWhenDisabled) {
             }
         }
         layer->getLayerFE().setReleaseFence(releaseFence);
-        layer->getLayerFE().setReleasedBuffer(layer->getLayerFE().getCompositionState()->buffer);
     }
 
     // We've got a list of layers needing fences, that are disjoint with

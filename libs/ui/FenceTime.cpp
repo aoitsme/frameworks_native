@@ -59,14 +59,6 @@ FenceTime::FenceTime(nsecs_t signalTime)
     }
 }
 
-FenceTimePtr FenceTime::makeValid(const sp<Fence>& fence) {
-    if (fence && fence->isValid()) {
-        return std::make_shared<FenceTime>(fence);
-    } else {
-        return std::make_shared<FenceTime>(systemTime());
-    }
-}
-
 void FenceTime::applyTrustedSnapshot(const Snapshot& src) {
     if (CC_UNLIKELY(src.state != Snapshot::State::SIGNAL_TIME)) {
         // Applying Snapshot::State::FENCE, could change the valid state of the
@@ -307,10 +299,9 @@ status_t FenceTime::Snapshot::unflatten(
 // ============================================================================
 void FenceTimeline::push(const std::shared_ptr<FenceTime>& fence) {
     std::lock_guard<std::mutex> lock(mMutex);
-    static constexpr size_t MAX_QUEUE_SIZE = 64;
-    while (mQueue.size() >= MAX_QUEUE_SIZE) {
+    while (mQueue.size() >= MAX_ENTRIES) {
         // This is a sanity check to make sure the queue doesn't grow unbounded.
-        // MAX_QUEUE_SIZE should be big enough not to trigger this path.
+        // MAX_ENTRIES should be big enough not to trigger this path.
         // In case this path is taken though, users of FenceTime must make sure
         // not to rely solely on FenceTimeline to get the final timestamp and
         // should eventually call Fence::getSignalTime on their own.

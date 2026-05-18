@@ -179,8 +179,6 @@ public:
     // Checks if the buffer's release fence has been set
     virtual LayerFE::ReleaseFencePromiseStatus getReleaseFencePromiseStatus() = 0;
 
-    virtual void setReleasedBuffer(sp<GraphicBuffer> buffer) = 0;
-
     // Indicates that the picture profile request was applied to this layer.
     virtual void onPictureProfileCommitted() = 0;
 

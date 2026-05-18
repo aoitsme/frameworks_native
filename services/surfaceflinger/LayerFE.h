@@ -18,7 +18,6 @@
 
 #include <android/gui/CachingHint.h>
 #include <gui/LayerMetadata.h>
-#include <ui/GraphicBuffer.h>
 #include <ui/LayerStack.h>
 #include <ui/PictureProfileHandle.h>
 
@@ -59,7 +58,6 @@ public:
     ftl::Future<FenceResult> createReleaseFenceFuture() override;
     void setReleaseFence(const FenceResult& releaseFence) override;
     LayerFE::ReleaseFencePromiseStatus getReleaseFencePromiseStatus() override;
-    void setReleasedBuffer(sp<GraphicBuffer> buffer) override;
     void setLastClientTargetAcquireFence(const FenceResult&) override;
     sp<Fence> getAndClearLastClientTargetAcquireFence() override;
     void onPictureProfileCommitted() override;
@@ -104,7 +102,6 @@ private:
     std::promise<FenceResult> mReleaseFence;
     ReleaseFencePromiseStatus mReleaseFencePromiseStatus = ReleaseFencePromiseStatus::UNINITIALIZED;
     HwcLayerDebugState mLastHwcState;
-    wp<GraphicBuffer> mReleasedBuffer;
     FenceResult mLastClientCompositionAcquireFence = Fence::NO_FENCE;
 };
 

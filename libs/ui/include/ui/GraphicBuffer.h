@@ -23,7 +23,6 @@
 #include <string>
 #include <utility>
 #include <vector>
-#include "ui/DependencyMonitor.h"
 
 #include <android/hardware_buffer.h>
 #include <ui/ANativeObjectBase.h>
@@ -235,8 +234,6 @@ public:
 
     void addDeathCallback(GraphicBufferDeathCallback deathCallback, void* context);
 
-    DependencyMonitor& getDependencyMonitor() { return mDependencyMonitor; }
-
 private:
     ~GraphicBuffer();
 
@@ -303,8 +300,6 @@ private:
     // and informs SurfaceFlinger that it should drop its strong pointer reference to the buffer.
     std::vector<std::pair<GraphicBufferDeathCallback, void* /*mDeathCallbackContext*/>>
             mDeathCallbacks;
-
-    DependencyMonitor mDependencyMonitor;
 };
 
 } // namespace android
