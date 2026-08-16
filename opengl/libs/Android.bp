@@ -168,7 +168,7 @@ cc_library_shared {
         "true": ["-DNV_ANDROID_FRAMEWORK_ENHANCEMENTS"],
         default: [],
     }) + select(soong_config_variable("EGL", "USE_DISPLAY_ARRAY"), {
-        "true": ["-DEGL_DISPLAY_ARRAY"],
+        true: ["-DEGL_DISPLAY_ARRAY"],
         default: [],
     }),
     llndk: {
